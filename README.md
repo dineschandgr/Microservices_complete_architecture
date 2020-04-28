@@ -10,9 +10,10 @@ And four microservices which are Eureka Clients
 4. Netflix Zuul Api Gateway server runs on port 8765
 
 #additional services
-5. Hystrix Dashboard(runs on port 8081)
-6. Zipkin Server runs on 9411 port
-7. RabbitMQ runs on port 15672
+
+1. Hystrix Dashboard(runs on port 8081)
+2. Zipkin Server runs on 9411 port
+3. RabbitMQ runs on port 15672
 
 The request comes in the Zuul Api Gateway and it routes to Movie Catalog Service
 Movie Catalog Service discovers 2 other microservices and communicates with them using RestTemplate
