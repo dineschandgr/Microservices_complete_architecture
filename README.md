@@ -9,15 +9,24 @@ This Project uses an application for Service Discovery and Netflix Hystrix for i
 2. Bulk Head Pattern
 
 Eureka Service Discovery Server (runs on port 8761)
-And three microservices which are Eureka Clients
+And four microservices which are Eureka Clients
 
-Movie Catalog Service (runs on port 8081)
-Movie Ratings Data Service (runs on port 8082)
-Movie Info Service (runs on port 8083)
-Hystrix Dashboard(runs on port 8081)
+1. Movie Catalog Service (runs on port 8081)
+2. Movie Ratings Data Service (runs on port 8082)
+3. Movie Info Service (runs on port 8083)
+4. Netflix Zuul Api Gateway server runs on port 8765
+5. Hystrix Dashboard(runs on port 8081)
+6. Zipkin Server runs on 9411 port
+7. RabbitMQ runs on port 15672
 
+The request comes in the Zuul Api Gateway and it routes to Movie Catalog Service
 Movie Catalog Service discovers 2 other microservices and communicates with them using RestTemplate
 Fallback methods are added for both the Microservice calls using Hystrix
+
+All 4 microservices add Spring Cloud Sleuth depedency for segment id,trace id,micro service name
+All the microservice implement AQMP Messaging dependency to write the logs to RabbitMQ
+Once logs are posted to RabbitMQ, Zipkin server pullups those logs and g
+
 
 Movie Info Service commuicates with an external service https://www.themoviedb.org/ using an API key in RestTemplate
 
@@ -58,5 +67,6 @@ Create a 3rd database named RatingsDataDB. Create a table named rating_info and 
 6. Access http://localhost:8082/movies/movie_id to access Movie Info Service
 7. Access http://localhost:8083/ratingsdata/user/user_name to access Ratings Data Service
 8. Microservice running on port 8081 consumes the services running on port 8082 and port 8083
+9. Access http://localhost:8081/movie/catalog/user_name  to route request through zuul api gateway to movie catalog service 
 
 
