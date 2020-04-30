@@ -1,29 +1,31 @@
 # Microservices_complete_architecture
 Microservice Architecture using Eureka Discovery Server, Zuul Api Gateway, Hystrix Fault Tolerance, Spring Cloud Sleuth, RabbitMQ and Zipkin
 
-# MicroServices_Fault_Tolerance
-MicroServices Level 2 - Fault Tolerance and Resilience using Hystrix 
-
-This Project uses an application for Service Discovery and Netflix Hystrix for implementing below patterns
-1. Circuit Breaker Pattern
-2. Bulk Head Pattern
-
 Eureka Service Discovery Server (runs on port 8761)
-And three microservices which are Eureka Clients
+And four microservices which are Eureka Clients
 
-Movie Catalog Service (runs on port 8081)
-Movie Ratings Data Service (runs on port 8082)
-Movie Info Service (runs on port 8083)
-Hystrix Dashboard(runs on port 8081)
+1. Movie Catalog Service (runs on port 8081)
+2. Movie Ratings Data Service (runs on port 8082)
+3. Movie Info Service (runs on port 8083)
+4. Netflix Zuul Api Gateway server runs on port 8765
 
+#additional services
+
+1. Hystrix Dashboard(runs on port 8081)
+2. Zipkin Server runs on 9411 port
+3. RabbitMQ runs on port 15672
+
+The request comes in the Zuul Api Gateway and it routes to Movie Catalog Service
 Movie Catalog Service discovers 2 other microservices and communicates with them using RestTemplate
 Fallback methods are added for both the Microservice calls using Hystrix
+
+All 4 microservices add Spring Cloud Sleuth depedency for segment id,trace id,micro service name
+All the microservices implement AQMP Messaging dependency to write the logs to RabbitMQ
+Once logs are posted to RabbitMQ, Zipkin server pullups those logs and generates distributed tracing for the requests
 
 Movie Info Service commuicates with an external service https://www.themoviedb.org/ using an API key in RestTemplate
 
 <img width="500" alt="API Architecture" src="https://github.com/dineschandgr/Microservices_complete_architecture/blob/master/architecture_diagram.jpg">
-
-
 
 
 Requirements :
@@ -48,7 +50,19 @@ Create a 3rd database named RatingsDataDB. Create a table named rating_info and 
 
 #include management.endpoints.web.exposure.include=hystrix.stream for hystrix
 
+#Install Erlang and RabbitMQ
+
+#set Zipkin to listen to RabbitMQ
+C:\>SET RABBIT_URI=amqp://localhost  
+C:\> java -jar zipkin-server-2.12.9-exec.jar  
+
+#Download Zipkin jar and run java -jar zipkin-server-2.12.9-exec.jar  
+
 #Create an api key from themoviedb site and include in application.properties of Movie Info Service
+
+#Route requests through zuul api gateway
+zuul.routes.movie.url=http://localhost:8081  
+zuul.routes.ratings.url=http://localhost:8083  
 
 1. Start the Discovery Application Server Application first which runs on port 8761
 2. Runs all three microservices which are registered which the Eureka Server
@@ -58,5 +72,8 @@ Create a 3rd database named RatingsDataDB. Create a table named rating_info and 
 6. Access http://localhost:8082/movies/movie_id to access Movie Info Service
 7. Access http://localhost:8083/ratingsdata/user/user_name to access Ratings Data Service
 8. Microservice running on port 8081 consumes the services running on port 8082 and port 8083
+9. Access http://localhost:8081/movie/catalog/user_name  to route request through zuul api gateway to movie catalog service 
+10. Access http://localhost:15672 to view RabbitMQ console
+11. Access http://localhost:9411/zipkin/ to view Zipkin console
 
 
