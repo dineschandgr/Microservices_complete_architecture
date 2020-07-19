@@ -15,8 +15,8 @@ And four microservices which are Eureka Clients
 2. Zipkin Server runs on 9411 port
 3. RabbitMQ runs on port 15672
 
-The request comes in the Zuul Api Gateway and it routes to Movie Catalog Service
-Movie Catalog Service discovers 2 other microservices and communicates with them using RestTemplate
+The request comes in the Zuul Api Gateway and it routes to Movie Catalog Service.
+Movie Catalog Service discovers 2 other microservices and communicates with them using RestTemplate.
 Fallback methods are added for both the Microservice calls using Hystrix
 
 All 4 microservices add Spring Cloud Sleuth depedency for segment id,trace id,micro service name
@@ -28,7 +28,7 @@ Movie Info Service commuicates with an external service https://www.themoviedb.o
 <img width="500" alt="API Architecture" src="https://github.com/dineschandgr/Microservices_complete_architecture/blob/master/architecture_diagram.jpg">
 
 
-Requirements :
+**Prerequisites** :
 
 #add pom.xml file You need to add pom.xml with the maven dependencies
 
